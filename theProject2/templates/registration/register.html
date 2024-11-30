@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+</head>
+<body>
+    <div>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Register</button>
+        </form>
+    </div>
+
+    <div style="margin-top: 20px;">
+        <a href="{% url 'police_officer_register' %}">Register as Police Officer</a>
+    </div>
+</body>
+</html>

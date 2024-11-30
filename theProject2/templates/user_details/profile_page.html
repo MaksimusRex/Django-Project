@@ -1,0 +1,21 @@
+{% extends 'common/navbar.html' %}
+
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <h1>Welcome!</h1>
+        <h2>Profile details:</h2>
+        <p>Username: {{ user.username }}</p>
+        <p>Email: {{ user.email }}</p>
+        {% if user.age != null %}
+            <p>Age: {{ user.age }}</p>
+        {% endif %}
+        {% if user.first_name != null %}
+            <p>First name: {{ user.first_name }}</p>
+        {% endif %}
+        {% if user.last_name != null %}
+            <p>Last name: {{ user.last_name }}</p>
+        {% endif %}
+    {% endif %}
+    <button>Add profile details</button>
+{% endblock %}
