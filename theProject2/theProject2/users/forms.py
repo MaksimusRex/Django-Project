@@ -3,19 +3,19 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm, Authenti
 from django import forms
 from django.core.validators import MinLengthValidator
 
-from theProject2.users.models import Profile, AppUser
+from theProject2.users.models import Profile
 from theProject2.utils.validators import AgeLimitValidator
 
 AppUser = get_user_model()
 
-### 1. AppUser Creation Form ###
+### AppUser Creation Form ###
 class AppUserCreationForm(UserCreationForm):
     class Meta:
         model = AppUser
         fields = ('username', 'email')
 
 
-### 2. Police Officer Creation Form ###
+### Police Officer Creation Form ###
 class PoliceOfficerCreationForm(AppUserCreationForm):
     first_name = forms.CharField(
         max_length=35,
@@ -58,14 +58,14 @@ class PoliceOfficerCreationForm(AppUserCreationForm):
         return user
 
 
-### 3. AppUser Change Form ###
+### AppUser Change Form ###
 class AppUserChangeForm(UserChangeForm):
     class Meta:
         model = AppUser
         fields = "__all__"
 
 
-### 4. Email or Username Login Form ###
+### Email or Username Login Form ###
 class EmailOrUsernameLoginForm(AuthenticationForm):
     username = forms.CharField(label="Username or Email", max_length=254)
 

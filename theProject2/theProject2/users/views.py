@@ -1,8 +1,10 @@
 from django.contrib.auth import login, get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import Group
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView
+from django_ratelimit.decorators import ratelimit
 
 from theProject2.users.forms import AppUserCreationForm, ChangeUserDetailsForm, PoliceOfficerCreationForm
 
@@ -36,3 +38,12 @@ class PoliceOfficerRegisterView(CreateView):
     form_class = PoliceOfficerCreationForm
     template_name = 'registration/police_officer_register.html'
     success_url = reverse_lazy('login')
+
+    # Automatically adds the Police officer role to the registered user if the form is successful
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        user = self.object
+        police_officer_group = Group.objects.get(name='Police Officer')
+        user.groups.add(police_officer_group)
+
+        return response
