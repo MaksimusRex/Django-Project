@@ -3,10 +3,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import Group
 from django.shortcuts import render
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, DetailView
 from django_ratelimit.decorators import ratelimit
 
 from theProject2.users.forms import AppUserCreationForm, ChangeUserDetailsForm, PoliceOfficerCreationForm
+from theProject2.utils.get_client_ip import get_client_ip
 
 UserModel = get_user_model()
 
@@ -34,6 +36,9 @@ class UserDetailView(LoginRequiredMixin, DetailView):
         # Display the details of the logged-in user
         return self.request.user
 
+
+# Limit the number of form submissions to 1 per day to protect against spam of requests
+#@method_decorator(ratelimit(key='ip', rate='1/d', method='POST'), name='form_valid') TODO: Maybe finish
 class PoliceOfficerRegisterView(CreateView):
     form_class = PoliceOfficerCreationForm
     template_name = 'registration/police_officer_register.html'

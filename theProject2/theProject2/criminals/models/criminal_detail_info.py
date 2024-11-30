@@ -23,5 +23,8 @@ class CriminalDetailInfo(models.Model):
     )
     address = models.TextField()
     date_of_birth = models.DateField()
+    description = models.TextField(
+        default='',
+    )
 
 

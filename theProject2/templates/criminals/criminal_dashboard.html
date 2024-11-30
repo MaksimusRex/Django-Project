@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>Registry of Criminals</h1>
+    {% if criminals %}
+    <div>
+        {% for criminal in criminals %}
+            <div>
+                <h1>Name:</h1>
+                <p>{{ criminal }}</p>
+                <p>Age: {{ criminal.age }}</p>
+                <p>Gender: {{ criminal.gender }}</p>
+                <button>Details</button>
+            </div>
+        {% endfor %}
+    </div>
+    {% else %}
+        <h1>There are no registered criminals.</h1>
+    {% endif %}
+</body>
+</html>
