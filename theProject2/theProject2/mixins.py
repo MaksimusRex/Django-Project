@@ -4,13 +4,13 @@ from django.core.exceptions import PermissionDenied
 
 class HasCriminalsChangePermMixin(PermissionRequiredMixin):
     def dispatch(self, request, *args, **kwargs):
-        if not request.user.has_perm('criminals.can_approve_criminals'):
+        if not request.user.has_perm('criminals.can_approve_criminals'): # TODO: Change permission names
             return self.handle_no_permission()
         return super().dispatch(request, *args, **kwargs)
 
 
 class CanCreateCriminalsMixin(PermissionRequiredMixin):
-    permission_required = 'criminals.can_create_criminals'
+    permission_required = 'criminals.add_criminalmaininfo'
 
     def dispatch(self, request, *args, **kwargs):
         # Check if the user has the required permission

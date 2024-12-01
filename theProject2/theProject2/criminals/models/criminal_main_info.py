@@ -59,7 +59,13 @@ class CriminalMainInfo(models.Model):
     created_at = models.DateTimeField(
         auto_now_add=True
     )
-    policeman = models.ForeignKey(AppUser, on_delete=models.CASCADE, limit_choices_to={'role': 'Police Officer'})
+    policeman = models.ForeignKey(
+        AppUser,
+        on_delete=models.CASCADE,
+        limit_choices_to={'role': 'Police Officer'},
+        null=True,
+        default=None,
+    )
 
     class Meta:
         permissions = [

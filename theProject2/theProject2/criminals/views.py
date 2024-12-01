@@ -1,5 +1,4 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, FormView, CreateView
 
@@ -12,7 +11,12 @@ class AddCriminalView(CanCreateCriminalsMixin, LoginRequiredMixin, CreateView):
     model = CriminalMainInfo
     form_class = CriminalCreationForm
     template_name = 'criminals/add-criminal.html'
-    success_url = reverse_lazy('criminal-dashboard')
+    success_url = reverse_lazy('criminal_dashboard')
+
+    def form_valid(self, form):
+        # Assign the currently logged-in user (policeman) to the criminal's record.
+        form.instance.policeman = self.request.user
+        return super().form_valid(form)
 
 
 class CriminalDashboardView(ListView):
