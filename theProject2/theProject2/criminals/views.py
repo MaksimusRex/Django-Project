@@ -5,13 +5,15 @@ from django.views.generic import ListView, FormView, CreateView
 
 from theProject2.criminals.forms import CriminalCreationForm
 from theProject2.criminals.models import CriminalMainInfo
+from theProject2.mixins import CanCreateCriminalsMixin
 
 
-class AddCriminalView(LoginRequiredMixin, CreateView):
+class AddCriminalView(CanCreateCriminalsMixin, LoginRequiredMixin, CreateView):
     model = CriminalMainInfo
     form_class = CriminalCreationForm
     template_name = 'criminals/add-criminal.html'
     success_url = reverse_lazy('criminal-dashboard')
+
 
 class CriminalDashboardView(ListView):
     template_name = 'criminals/criminal_dashboard.html'
@@ -26,11 +28,14 @@ class CriminalDashboardView(ListView):
 
         if not self.request.user.has_perm('criminals.can_approve_criminals'):
             queryset = queryset.filter(is_approved=True)
+            queryset = queryset.order_by('created_at').values()
+
+        elif self.request.user.has_perm('criminals.can_approve_criminals'):
+            queryset = queryset.order_by('-is_approved', 'created_at').values() # TODO: Order by is_approved then date added
 
         if 'query' in self.request.GET:
             query = self.request.GET.get('query')
             queryset = queryset.filter(name__icontains=query)
-
 
         return queryset
 

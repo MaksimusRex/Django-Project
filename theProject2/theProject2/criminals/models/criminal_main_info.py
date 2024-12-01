@@ -56,6 +56,9 @@ class CriminalMainInfo(models.Model):
     is_approved = models.BooleanField(
         default=False,
     )
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
     policeman = models.ForeignKey(AppUser, on_delete=models.CASCADE, limit_choices_to={'role': 'Police Officer'})
 
     class Meta:
