@@ -11,13 +11,39 @@
         {% for criminal in criminals %}
             <div>
                 <h1>Name:</h1>
-                <p>{{ criminal }}</p>
+                <p>Name: {{ criminal.first_name }} {{ criminal.middle_name }} {{ criminal.last_name }}</p>
                 <p>Age: {{ criminal.age }}</p>
                 <p>Gender: {{ criminal.gender }}</p>
                 <button>Details</button>
+                {% if not criminal.is_approved %}
+                    {% if 'criminals.can_approve_criminals' in request.user.get_group_permissions or perms.criminals.can_do_approve %}
+                        <a href="{% url 'approve' criminal.id %}">Approve</a>
+                    {% endif %}
+                {% endif %}
             </div>
         {% endfor %}
     </div>
+    {% if not page_obj.has_next and page_obj.number == 1 %}
+                <p>That's the only page</p>
+            {% else %}
+                <div>
+                    <span>
+                        {% if page_obj.has_previous %}
+                            <a href="?page=1">&laquo; first</a>
+                            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                        {% endif %}
+                
+                        <span>
+                            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                        </span>
+                
+                        {% if page_obj.has_next %}
+                            <a href="?page={{ page_obj.next_page_number }}">next</a>
+                            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                        {% endif %}
+                    </span>
+                </div>
+            {% endif %}    
     {% else %}
         <h1>There are no registered criminals.</h1>
     {% endif %}

@@ -1,14 +1,10 @@
 from django.contrib.auth import login, get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import Group
-from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, DetailView
-from django_ratelimit.decorators import ratelimit
 
 from theProject2.users.forms import AppUserCreationForm, ChangeUserDetailsForm, PoliceOfficerCreationForm
-from theProject2.utils.get_client_ip import get_client_ip
 
 UserModel = get_user_model()
 
@@ -19,7 +15,7 @@ class UserRegisterView(CreateView):
 
     def form_valid(self, form):
         user = form.save()  # Save the new user
-        login(self.request, user)  # Log the user in
+        login(self.request, user, backend='theProject2.users.authentication.EmailOrUsernameAuthentication')  # Log the user in
         return super().form_valid(form)
 
 class ChangeProfileDetails:

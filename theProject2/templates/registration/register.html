@@ -11,10 +11,14 @@
             {{ form.as_p }}
             <button type="submit">Register</button>
         </form>
+        
+        <button>
+            Register as Police Officer
+        </button>
     </div>
 
-    <div style="margin-top: 20px;">
-        <a href="{% url 'police_officer_register' %}">Register as Police Officer</a>
+    <div>
+        <p>Already have an account? <a href="{% url 'login' %}">Log in</a>.</p>
     </div>
 </body>
 </html>

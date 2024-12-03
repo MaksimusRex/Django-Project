@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, FormView, CreateView
 
@@ -47,6 +48,8 @@ def approve_criminal(request, pk): # TODO: Make async view
     criminal = CriminalMainInfo.objects.get(pk=pk)
     criminal.is_approved = True
     criminal.save()
+
+    return redirect(request.META.get('HTTP_REFERER'))
 
 
 
