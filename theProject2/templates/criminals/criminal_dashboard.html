@@ -14,7 +14,7 @@
                 <p>Name: {{ criminal.first_name }} {{ criminal.middle_name }} {{ criminal.last_name }}</p>
                 <p>Age: {{ criminal.age }}</p>
                 <p>Gender: {{ criminal.gender }}</p>
-                <button>Details</button>
+                <a href="{% url 'criminal_details' criminal.id %}">Details</a>
                 {% if not criminal.is_approved %}
                     {% if 'criminals.can_approve_criminals' in request.user.get_group_permissions or perms.criminals.can_do_approve %}
                         <a href="{% url 'approve' criminal.id %}">Approve</a>
