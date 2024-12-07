@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Approve Policemen</title>
+</head>
+<body>
+    <h1>Approve Policemen</h1>
+    {% if policemen %}
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for policeman in policemen %}
+                    <tr>
+                        <td>{{ policeman.id }}</td>
+                        <td>{{ policeman.username }}</td>
+                        <td>{{ policeman.email }}</td>
+                        <td>
+                            <form method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="policeman_id" value="{{ policeman.id }}">
+                                <button type="submit">Approve</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No policemen awaiting approval.</p>
+    {% endif %}
+</body>
+</html>
