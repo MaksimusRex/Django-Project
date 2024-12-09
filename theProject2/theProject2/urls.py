@@ -25,4 +25,5 @@ urlpatterns = [
     path('criminals/', include('theProject2.criminals.urls')),
     path('prisons/', include('theProject2.prisons.urls')),
     path('crimes/', include('theProject2.crimes.urls')),
+    path('vehicles/', include('theProject2.vehicles.urls')),
 ]

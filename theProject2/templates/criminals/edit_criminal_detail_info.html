@@ -6,73 +6,10 @@
         {{ main_form.as_p }}
         {{ detail_form.as_p }}
         <button type="submit">Save Details</button>
+        
     </form>
 
-    <h2>Crimes</h2>
-    <ul id="crime-list">
-        {% for crime in criminal.crimes.all %}
-        <li>{{ crime.description }} - {{ crime.date }}</li>
-        {% endfor %}
-    </ul>
-
-    <button id="add-crime-btn">Add Crime</button>
-
-    <!-- Modal for adding crimes -->
-    <div id="crime-modal" style="display:none;">
-        <form id="crime-form">
-            <div id="crime-form-content">
-                {% csrf_token %}
-                {{ crime_form.as_p }}
-            </div>
-            <button type="submit">Save Crime</button>
-        </form>
-    </div>
+    
 </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    // Open the Add Crime modal when the button is clicked
-    document.getElementById('add-crime-btn').addEventListener('click', function () {
-        const criminalId = this.getAttribute('data-criminal-id');
 
-        // Fetch the Add Crime form
-        fetch("{% url 'add_crime' criminal.id %}")
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('crime-form-content').innerHTML = data;
-                document.getElementById('crime-modal').style.display = 'block';
-            })
-            .catch(error => console.error('Error fetching form:', error));
-    });
-
-    // Handle form submission
-    document.getElementById('crime-form').addEventListener('submit', function (event) {
-        event.preventDefault();  // Prevent the default form submission
-
-        const criminalId = document.getElementById('add-crime-btn').getAttribute('data-criminal-id');
-        const formData = new FormData(this);
-
-        fetch("{% url 'add_crime' criminal.id %}", {
-            method: 'POST',
-            body: formData,
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                document.getElementById('crime-modal').style.display = 'none';
-                location.reload();  // Refresh the page to show updated data
-            } else {
-                // Re-load the form with errors if submission failed
-                document.getElementById('crime-form-content').innerHTML = data.form_html;
-            }
-        })
-        .catch(error => console.error('Error submitting form:', error));
-    });
-
-    // Close the modal
-    document.getElementById('close-modal-btn').addEventListener('click', function () {
-        document.getElementById('crime-modal').style.display = 'none';
-    });
-});
-
-</script>

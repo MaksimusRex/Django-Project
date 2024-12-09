@@ -146,6 +146,7 @@ class EditCriminalDetailInfoView(LoginRequiredMixin, PermissionRequiredMixin, Up
         context = super().get_context_data(**kwargs)
         detail_info = getattr(self.object, 'detail_info', None)  # Link detail info if it exists
 
+        context['vehicles'] = self.object.vehicles.all()
         context['criminal'] = self.object
         context['main_form'] = kwargs.get('main_form', CriminalCreationForm(instance=self.object))
         context['detail_form'] = kwargs.get('detail_form', CriminalDetailInfoForm(instance=detail_info))

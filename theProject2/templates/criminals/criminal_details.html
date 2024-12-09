@@ -8,12 +8,13 @@
 <body>
     <div>
         <h1>{{ criminal.first_name }} {{ criminal.middle_name }} {{ criminal.last_name }}</h1>
+        {% if criminal.picture %}
+            <p><img src="{{ criminal.picture }}" alt="{{ criminal.first_name }}'s picture" /></p>
+        {% else %}
         <p>Gender: {{ criminal.gender }}</p>
         <p>Age: {{ criminal.age }}</p>
         <p>Height: {{ criminal.height }} cm</p>
-        {% if criminal.picture %}
-            <p>Picture: <img src="{{ criminal.picture }}" alt="{{ criminal.first_name }}'s picture" /></p>
-        {% else %}
+        
             <p>Picture: <img src="{% static 'images/default_photo.jpg' %}" alt="Default picture" /></p>
         {% endif %}
         <p>Created At: {{ criminal.created_at }}</p>
@@ -31,15 +32,141 @@
         {% else %}
             <p>No additional details available for this criminal.</p>
         {% endif %}
+    
         <h1>Crimes commited:</h1>
-        {% if criminal.crimes %}
+        {% if criminal.crimes.all %}
             {% for crime in criminal.crimes.all %}
-                <p>{{ crime.name }}</p>
+                <p><a href="{% url 'detail_crime' crime.pk %}">{{ crime.name }}</a></p>
+                <p>{{ crime.description }}</p>
             {% endfor %}
+        {% else %}
+            <h2>No crimes recorded.</h2>
         {% endif %}
+    
+        
+    
+        <button id="add-crime-btn">Add Crime</button>
+    
+        <!-- Modal for adding crimes -->
+        <div id="crime-modal" style="display:none;">
+            <form id="crime-form">
+                <div id="crime-form-content">
+                    {% csrf_token %}
+                    {{ crime_form.as_p }}
+                </div>
+                <button type="submit">Save Crime</button>
+            </form>
+        </div>
+    
+        <h1>Possible vehicles:</h1>
+        {% if criminal.vehicles.all %}
+            {% for vehicle in criminal.vehicles.all %}
+                <p><a href="{% url 'detail_vehicle' vehicle.pk %}">{{ vehicle }}</a></p>
+            {% endfor %}
+        {% else %}
+            <h2>No vehicles recorded currently.</h2>
+        {% endif %}
+    
+    
+        
+    
+        <button id="add-vehicle-btn" data-criminal-id="{{ criminal.id }}">Add Vehicle</button>
+    
+        <!-- Modal for adding vehicles -->
+        <div id="vehicle-modal" style="display:none;">
+            <form id="vehicle-form">
+                <div id="vehicle-form-content">
+                    {% csrf_token %}
+                    {{ vehicle_form.as_p }}
+                </div>
+                <button type="submit">Save Vehicle</button>
+            </form>
+        </div>
+    
         {% if 'criminals.change_criminalmaininfo' in request.user.get_group_permissions or perms.criminals.can_do_change%}
-            <a href="{% url 'edit_details' criminal.id %}">Edit Details</a>
+            <h2>Edit criminal details:</h2>
+            <a href="{% url 'edit_details' criminal.id %}"><button>Edit Details</button></a>
         {% endif %}
     </div>
 </body>
 </html>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Crime modal logic
+    document.getElementById('add-crime-btn').addEventListener('click', function () {
+        const criminalId = this.getAttribute('data-criminal-id');
+
+        fetch("{% url 'add_crime' criminal.id %}")
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('crime-form-content').innerHTML = data;
+                document.getElementById('crime-modal').style.display = 'block';
+            })
+            .catch(error => console.error('Error fetching form:', error));
+    });
+
+    document.getElementById('crime-form').addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const criminalId = document.getElementById('add-crime-btn').getAttribute('data-criminal-id');
+        const formData = new FormData(this);
+
+        fetch("{% url 'add_crime' criminal.id %}", {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('crime-modal').style.display = 'none';
+                location.reload();
+            } else {
+                document.getElementById('crime-form-content').innerHTML = data.form_html;
+            }
+        })
+        .catch(error => console.error('Error submitting form:', error));
+    });
+
+    // Vehicle modal logic
+    document.getElementById('add-vehicle-btn').addEventListener('click', function () {
+        const criminalId = this.getAttribute('data-criminal-id');
+
+        fetch("{% url 'add_vehicle' criminal.id %}")
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('vehicle-form-content').innerHTML = data;
+                document.getElementById('vehicle-modal').style.display = 'block';
+            })
+            .catch(error => console.error('Error fetching form:', error));
+    });
+
+    document.getElementById('vehicle-form').addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const criminalId = document.getElementById('add-vehicle-btn').getAttribute('data-criminal-id');
+        const formData = new FormData(this);
+
+        fetch("{% url 'add_vehicle' criminal.id %}", {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('vehicle-modal').style.display = 'none';
+                location.reload();
+            } else {
+                document.getElementById('vehicle-form-content').innerHTML = data.form_html;
+            }
+        })
+        .catch(error => console.error('Error submitting form:', error));
+    });
+
+    // Close modals
+    document.querySelectorAll('.close-modal-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            document.getElementById(this.dataset.target).style.display = 'none';
+        });
+    });
+});
+</script>
