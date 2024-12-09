@@ -2,6 +2,7 @@ from django.core.validators import MinLengthValidator
 from django.db import models
 
 from theProject2.criminals.models.choices import GenderChoices
+from theProject2.prisons.models import Prison
 from theProject2.users.models import AppUser
 from theProject2.utils.validators import AgeLimitValidator
 
@@ -66,11 +67,21 @@ class CriminalMainInfo(models.Model):
         null=True,
         default=None,
     )
+    prison = models.ForeignKey(
+        Prison,
+        on_delete=models.SET_NULL,
+        related_name='criminals',
+        null=True,
+        blank=True
+    )
 
     class Meta:
         permissions = [
             ('can_approve_criminals', 'Can approve criminals'),
         ]
+
+    def total_crime_points(self):
+        return sum(crime.points for crime in self.crimes.all())
 
     def __str__(self):
         return f"{self.first_name} {self.middle_name} {self.last_name}"

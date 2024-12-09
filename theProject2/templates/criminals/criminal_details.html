@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,6 +13,8 @@
         <p>Height: {{ criminal.height }} cm</p>
         {% if criminal.picture %}
             <p>Picture: <img src="{{ criminal.picture }}" alt="{{ criminal.first_name }}'s picture" /></p>
+        {% else %}
+            <p>Picture: <img src="{% static 'images/default_photo.jpg' %}" alt="Default picture" /></p>
         {% endif %}
         <p>Created At: {{ criminal.created_at }}</p>
         <p>Policeman: {{ criminal.policeman }}</p>
@@ -27,6 +30,12 @@
             <p>Description: {{ detail_info.description|default:"No information" }}</p>
         {% else %}
             <p>No additional details available for this criminal.</p>
+        {% endif %}
+        <h1>Crimes commited:</h1>
+        {% if criminal.crimes %}
+            {% for crime in criminal.crimes.all %}
+                <p>{{ crime.name }}</p>
+            {% endfor %}
         {% endif %}
         {% if 'criminals.change_criminalmaininfo' in request.user.get_group_permissions or perms.criminals.can_do_change%}
             <a href="{% url 'edit_details' criminal.id %}">Edit Details</a>

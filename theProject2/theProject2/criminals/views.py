@@ -1,12 +1,14 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, JsonResponse
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, FormView, CreateView, UpdateView, DetailView
 
+from theProject2.crimes.forms import CrimeForm
 from theProject2.criminals.forms import CriminalCreationForm, CriminalDetailInfoForm
 from theProject2.criminals.models import CriminalMainInfo, CriminalDetailInfo
 from theProject2.mixins import CanCreateCriminalsMixin
+from theProject2.prisons.models import Prison
 
 
 class AddCriminalView(CanCreateCriminalsMixin, LoginRequiredMixin, CreateView):
@@ -19,6 +21,7 @@ class AddCriminalView(CanCreateCriminalsMixin, LoginRequiredMixin, CreateView):
         # Assign the currently logged-in user (policeman) to the criminal's record.
         form.instance.policeman = self.request.user
         return super().form_valid(form)
+
 
 
 class CriminalDashboardView(ListView):
@@ -67,8 +70,66 @@ class CriminalDetailView(DetailView):
         return context
 
 
+#class EditCriminalDetailInfoView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+#    model = CriminalMainInfo
+#    permission_required = 'criminals.change_criminalmaininfo'
+#    template_name = 'criminals/edit_criminal_detail_info.html'
+#
+#    def get_object(self, queryset=None):
+#        return get_object_or_404(CriminalMainInfo, pk=self.kwargs['pk'])
+#
+#    def get_success_url(self):
+#        return reverse('criminal_details', kwargs={'pk': self.object.pk})
+#
+#    def get_context_data(self, **kwargs):
+#        context = super().get_context_data(**kwargs)
+#        self.object = self.get_object()
+#
+#        # Retrieve associated detail info
+#        detail_info = getattr(self.object, 'detail_info', None)
+#
+#        # Calculate total crime points for filtering prisons
+#        criminal_points = self.object.total_crime_points()
+#
+#        # Main form (with filtered prisons)
+#        main_form = kwargs.get('main_form', CriminalCreationForm(
+#            instance=self.object,
+#            initial={'prison': self.object.prison},
+#        ))
+#        main_form.fields['prison'].queryset = Prison.objects.filter(required_points__lte=criminal_points)
+#
+#        # Detail form
+#        detail_form = kwargs.get('detail_form', CriminalDetailInfoForm(instance=detail_info))
+#
+#        # Add forms to context
+#        context['main_form'] = main_form
+#        context['detail_form'] = detail_form
+#        return context
+#
+#    def post(self, request, *args, **kwargs):
+#        self.object = self.get_object()
+#        detail_info = getattr(self.object, 'detail_info', None)
+#
+#        # Instantiate forms with POST data
+#        main_form = CriminalCreationForm(request.POST, instance=self.object)
+#        detail_form = CriminalDetailInfoForm(request.POST, instance=detail_info)
+#
+#        if main_form.is_valid() and detail_form.is_valid():
+#            main_form.save()
+#            detail_instance = detail_form.save(commit=False)
+#            detail_instance.main_info = self.object
+#            detail_instance.save()
+#            return redirect(self.get_success_url())
+#
+#        # Render the form with errors if validation fails
+#        return self.render_to_response(self.get_context_data(
+#            main_form=main_form,
+#            detail_form=detail_form,
+#        ))
+
+
 class EditCriminalDetailInfoView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
-    model = CriminalDetailInfo
+    model = CriminalMainInfo
     permission_required = 'criminals.change_criminalmaininfo'
     template_name = 'criminals/edit_criminal_detail_info.html'
     criminal = None
@@ -81,22 +142,11 @@ class EditCriminalDetailInfoView(LoginRequiredMixin, PermissionRequiredMixin, Up
     def get_success_url(self):
         return reverse('criminal_details', kwargs={'pk': self.object.pk})
 
-    #def get(self, request, *args, **kwargs):
-    #    self.criminal = get_object_or_404(CriminalMainInfo, pk=self.kwargs['pk'])
-    #    self.detail_info = self.criminal.detail_info if hasattr(self.criminal, 'detail_info') else None
-#
-    #    if not self.has_permission():
-    #        return HttpResponseForbidden("You do not have permission to edit this criminal.")
-#
-    #    return self.render_to_response(self.get_context_data(
-    #        main_form=CriminalCreationForm(instance=self.criminal),
-    #        detail_form=CriminalDetailInfoForm(instance=self.detail_info),
-    #    ))
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         detail_info = getattr(self.object, 'detail_info', None)  # Link detail info if it exists
 
+        context['criminal'] = self.object
         context['main_form'] = kwargs.get('main_form', CriminalCreationForm(instance=self.object))
         context['detail_form'] = kwargs.get('detail_form', CriminalDetailInfoForm(instance=detail_info))
         return context
@@ -120,8 +170,3 @@ class EditCriminalDetailInfoView(LoginRequiredMixin, PermissionRequiredMixin, Up
             main_form=main_form,
             detail_form=detail_form,
         ))
-
-
-
-
-

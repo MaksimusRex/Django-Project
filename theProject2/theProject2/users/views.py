@@ -1,5 +1,3 @@
-from lib2to3.pgen2.tokenize import group
-
 from django.contrib.auth import login, get_user_model
 from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -24,7 +22,7 @@ class UserRegisterView(CreateView):
         login(self.request, user, backend='theProject2.users.authentication.EmailOrUsernameAuthentication')  # Log the user in
         return super().form_valid(form)
 
-class ChangeProfileDetails:
+class ChangeProfileDetails: # TODO: Finish??
     form_class = ChangeUserDetailsForm
     template_name = 'registration/change_profile_details.html'
     success_url = reverse_lazy(template_name)

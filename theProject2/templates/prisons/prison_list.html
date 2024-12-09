@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    {% for prison in prisons %}
+        <p>{{ prison.name }} - Population: {{ prison.current_population }}/{{ prison.capacity }}</p>
+        {% if prison.is_full %}
+            <p style="color: red;">This prison is at full capacity!</p>
+        {% endif %}
+    {% endfor %}
+</body>
+</html>
