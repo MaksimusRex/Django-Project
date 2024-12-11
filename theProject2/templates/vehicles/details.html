@@ -10,7 +10,7 @@
     <p><strong>Make:</strong> {{ vehicle.make }}</p>
     <p><strong>Model:</strong> {{ vehicle.model }}</p>
     <p><strong>Year:</strong> {{ vehicle.year }}</p>
-    <p><strong>License plate:</strong> {{ vehicle.license_plate }}</p>
+    <p><strong>License plate:</strong> {{ vehicle.license_plate|upper }}</p>
     <p><strong>Criminal:</strong> <a href="{% url 'criminal_details' vehicle.criminal.id %}">{{ vehicle.criminal.first_name }} {{ vehicle.criminal.last_name }}</a></p>
     
     {% if 'vehicles.change_vehicle' and 'vehicles.delete_vehicle' in request.user.get_group_permissions or perms.criminals.can_do_change%}

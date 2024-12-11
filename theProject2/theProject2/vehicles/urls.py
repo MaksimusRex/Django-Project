@@ -1,6 +1,7 @@
 from django.urls import path, include
 
-from theProject2.vehicles.views import AddVehicleView, EditVehicleView, DeleteVehicleView, DetailVehicleView
+from theProject2.vehicles.views import AddVehicleView, EditVehicleView, DeleteVehicleView, DetailVehicleView, \
+    DashboardVehicleView
 
 urlpatterns = [
     path('<int:pk>/', include([
@@ -9,4 +10,5 @@ urlpatterns = [
         path('delete/', DeleteVehicleView.as_view(), name='delete_vehicle'),
     ])),
     path('<int:criminal_id>/add-vehicle/', AddVehicleView.as_view(), name='add_vehicle'),
+    path('dashboard/', DashboardVehicleView.as_view(), name='vehicle_dashboard'),
 ]

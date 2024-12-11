@@ -1,12 +1,28 @@
+from django.core.validators import MinValueValidator, MaxValueValidator, MinLengthValidator
 from django.db import models
+from pkg_resources import require
+
 from theProject2.criminals.models import CriminalMainInfo
 from theProject2.crimes.choices import CrimeTypeChoices
 
 
 class Crime(models.Model):
-    name = models.CharField(max_length=50)
-    description = models.TextField()
-    points = models.PositiveIntegerField()
+    name = models.CharField(
+        max_length=35,
+        validators=[
+            MinLengthValidator(2),
+        ],
+    )
+    description = models.TextField(
+        blank=False,
+        null=False,
+    )
+    points = models.PositiveIntegerField(
+        validators=[
+            MinValueValidator(1),
+            MaxValueValidator(15)
+        ],
+    )
     crime_type = models.CharField(
         max_length=3,
         choices=CrimeTypeChoices.choices,

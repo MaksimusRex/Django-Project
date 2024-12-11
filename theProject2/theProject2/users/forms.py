@@ -12,7 +12,24 @@ AppUser = get_user_model()
 class AppUserCreationForm(UserCreationForm):
     class Meta:
         model = AppUser
-        fields = ('username', 'email')
+        fields = ('username', 'email', 'password1', 'password2')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['username'].widget.attrs.update({
+            'placeholder': 'Enter your username'
+        })
+        self.fields['email'].widget.attrs.update({
+            'placeholder': 'Enter your email address'
+        })
+        self.fields['password1'].widget.attrs.update({
+            'placeholder': 'Create a password'
+        })
+        self.fields['password2'].widget.attrs.update({
+            'placeholder': 'Confirm your password'
+        })
+
+
 
 
 ### Police Officer Creation Form ###

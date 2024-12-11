@@ -11,6 +11,10 @@ class Prison(models.Model):
         max_length=10,
         choices=SecurityLevelChoices.choices
     )
+    picture = models.URLField(
+        blank=True,
+        null=True,
+    )
 
     @property
     def current_population(self):
@@ -18,3 +22,6 @@ class Prison(models.Model):
 
     def is_full(self):
         return self.current_population >= self.capacity
+
+    def __str__(self):
+        return self.name

@@ -1,24 +1,55 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Register</title>
+    <link rel="stylesheet" href="{% static 'registration/register.css' %}">
 </head>
 <body>
-    <div>
-        <form method="POST">
+    <div class="register-div">
+        <h1>Register</h1>
+        <form method="POST" class="login-form">
             {% csrf_token %}
-            {{ form.as_p }}
+            <div>
+                <label for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+                {{ form.username }}
+            </div>
+            <div>
+                <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+                {{ form.email }}
+            </div>
+            <div>
+                <label for="{{ form.password1.id_for_label }}">{{ form.password1.label }}</label>
+                {{ form.password1 }}
+            </div>
+            
+            <!-- Move help text here -->
+            <div class="helptext-container">
+                {{ form.password1.help_text }}
+            </div>
+            
+            <div>
+                <label for="{{ form.password2.id_for_label }}">{{ form.password2.label }}</label>
+                {{ form.password2 }}
+            </div>
+            
+            <!-- Move help text here -->
+            <div class="helptext-container">
+                <p>{{ form.password2.help_text }}</p>
+            </div>
             <button type="submit">Register</button>
         </form>
         
         <a href="{% url 'police_officer_register' %}">
             Register as Police Officer
         </a>
+        <p>Already have an account? <a href="{% url 'login' %}">Log in</a>.</p>
     </div>
 
     <div>
-        <p>Already have an account? <a href="{% url 'login' %}">Log in</a>.</p>
+        
     </div>
 </body>
 </html>

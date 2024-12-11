@@ -1,0 +1,22 @@
+{% extends 'common/navbar.html' %}
+{% load static %}
+
+{% block content %}
+<body>
+    {% for prison in prisons %}
+        <div>
+            {% if prison.picture %}
+                <p><img src="{{ criminal.picture }}" alt="{{ criminal.first_name }}'s picture" /></p>
+            {% endif %}
+            <p>Name: {{ prison.name }}</p>
+            <p>Population: {{ prison.current_population }}/{{ prison.capacity }}</p>
+            {% if prison.is_full %}
+                <p style="color: red;">This prison is at full capacity!</p>
+            {% endif %}
+            {% if 'prisons.change_prison' in request.user.get_group_permissions or perms.criminals.can_do_approve %}
+                <a href="{% url 'detail_prison' prison.pk %}"><button>Details</button></a>
+            {% endif %}
+        </div>
+    {% endfor %}
+</body>
+{% endblock %}

@@ -1,13 +1,17 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" href="{% static 'registration/register.css' %}">
 </head>
 <body>
 <div>
+<div class="register-div">
     <h2>Police Officer Registration</h2>
-    <form method="post" novalidate>
+    <form method="post" novalidate class="login-form">
         {% csrf_token %}
         <div>
             <label for="id_username">Username</label>
@@ -67,6 +71,7 @@
 
         <button type="submit">Register as Police Officer</button>
     </form>
+</div>
 </div>
 </body>
 </html>

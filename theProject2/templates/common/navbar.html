@@ -1,28 +1,76 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" href="{% static 'common/navigation.css' %}">
+    <link rel="stylesheet" href="{% static 'common/base.css' %}">
 </head>
-<body>
-    {% if not request.user.is_authenticated %}
-        <a href="{% url 'login' %}">
-            <h1>Login</h1>
-        </a>
-    {% else %}
-        <form method="post" action="{% url 'logout' %}" style="display: inline;">
-            {% csrf_token %}
-            <button type="submit" style="background: none; border: none; color: inherit; cursor: pointer; font: inherit;">
-                Logout
+    <nav class="navbar">
+        {% if not request.user.is_authenticated %}
+            <ul class="nav-list">
+                <li>
+                    <a href="{% url 'home' %}">
+                        Home Page
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'criminal_dashboard' %}">
+                        Criminals Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'vehicle_dashboard' %}">
+                        Vehicles Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'prisons_dashboard' %}">
+                        Prisons Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'login' %}">
+                        Login
+                    </a>
+                </li>
+            </ul>
+            
+            
+        {% else %}
+            <ul class="nav-list">
+                <li>
+                    <a href="{% url 'criminal_dashboard' %}">
+                        Criminals Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'vehicle_dashboard' %}">
+                        Vehicles Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'prisons_dashboard' %}">
+                        Prisons Dashboard
+                    </a>
+                </li>
+            </ul>
+            <button>
+                <a href="{% url 'users' %}">
+                    <p>Profile details</p>
+                </a>
             </button>
-        </form>
-        <button>
-            <a href="{% url 'users' %}">
-                <h1>Profile details</h1>
-            </a>
-        </button>
-        
-    {% endif %}
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit">
+                    Logout
+                </button>
+            </form>
+        {% endif %}
+    </nav>
+<body>
 {% block content %}
 {% endblock %}
 </body>

@@ -1,12 +1,12 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.views import View
-from django.views.generic import UpdateView, DetailView
+from django.views.generic import UpdateView, DetailView, ListView
 
 from theProject2.criminals.models import CriminalMainInfo
-from theProject2.vehicles.forms import VehicleForm
+from theProject2.vehicles.forms import VehicleForm, VehicleSearchForm
 from theProject2.vehicles.models import Vehicle
 
 
@@ -77,3 +77,36 @@ class DetailVehicleView(DetailView):
 
     def get_object(self):
         return get_object_or_404(Vehicle, pk=self.kwargs['pk'])
+
+
+
+class DashboardVehicleView(ListView):
+    template_name = 'vehicles/vehicle_dashboard.html'
+    context_object_name = 'vehicles'
+    model = Vehicle
+    paginate_by = 4
+
+    def get_queryset(self):
+        queryset = self.model.objects.all()
+        search_params = self.request.GET
+
+        vehicle_type_filter = search_params.get('vehicle_type')
+        model_filter = search_params.get('model')
+        year_filter = search_params.get('year')
+        color_filter = search_params.get('color')
+
+        if vehicle_type_filter:
+            queryset = queryset.filter(vehicle_type=vehicle_type_filter)
+        if model_filter:
+            queryset = queryset.filter(model__icontains=model_filter)
+        if year_filter:
+            queryset = queryset.filter(year=year_filter)
+        if color_filter:
+            queryset = queryset.filter(color__icontains=color_filter)
+
+        return queryset.order_by('year')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search_form'] = VehicleSearchForm(self.request.GET)  # Pre-fill with current filters
+        return context

@@ -1,0 +1,68 @@
+{% extends 'common/navbar.html' %}
+{% load static %}
+
+{% block content %}
+<body>
+    <h1>Registered Vehicles</h1>
+    
+    {% if vehicles %}
+            <!-- Search Form -->
+    <form method="get" action="{% url 'vehicle_dashboard' %}">
+        <div>
+            {{ search_form.vehicle_type.label }}: {{ search_form.vehicle_type }}
+        </div>
+        <div>
+            {{ search_form.model.label }}: {{ search_form.model }}
+        </div>
+        <div>
+            {{ search_form.year.label }}: {{ search_form.year }}
+        </div>
+        <div>
+            {{ search_form.color.label }}: {{ search_form.color }}
+        </div>
+        <button type="submit">Search</button>
+    </form>
+
+        
+    <div>
+        {% for vehicle in vehicles %}
+            <div>
+                <h1>Type:</h1>
+                <p>Brand: {{ vehicle.make }}</p>
+                <p>Model: {{ vehicle.model }}</p>
+                <p>Year: {{ vehicle.year }}</p>
+                <p>License plate: {{ vehicle.license_plate|upper }}</p>
+                <p>Criminal: <a href="{% url 'criminal_details' vehicle.criminal.id %}">{{ vehicle.criminal.first_name }} {{ vehicle.criminal.last_name }}</a></p>
+
+                {% if 'vehicles.change_vehicle' in request.user.get_group_permissions or perms.criminals.can_do_approve %}
+                    <a href="{% url 'detail_vehicle' vehicle.pk %}"><button>Details</button></a>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+    {% if not page_obj.has_next and page_obj.number == 1 %}
+                <p>That's the only page</p>
+            {% else %}
+                <div>
+                    <span>
+                        {% if page_obj.has_previous %}
+                            <a href="?page=1">&laquo; first</a>
+                            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                        {% endif %}
+                
+                        <span>
+                            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                        </span>
+                
+                        {% if page_obj.has_next %}
+                            <a href="?page={{ page_obj.next_page_number }}">next</a>
+                            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                        {% endif %}
+                    </span>
+                </div>
+            {% endif %}    
+    {% else %}
+        <h1>There are no registered vehicles.</h1>
+    {% endif %}
+</body>
+{% endblock %}

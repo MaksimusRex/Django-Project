@@ -5,7 +5,7 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, FormView, CreateView, UpdateView, DetailView
 
 from theProject2.crimes.forms import CrimeForm
-from theProject2.criminals.forms import CriminalCreationForm, CriminalDetailInfoForm
+from theProject2.criminals.forms import CriminalCreationForm, CriminalDetailInfoForm, CriminalEditMainInfoForm
 from theProject2.criminals.models import CriminalMainInfo, CriminalDetailInfo
 from theProject2.mixins import CanCreateCriminalsMixin
 from theProject2.prisons.models import Prison
@@ -134,7 +134,7 @@ class EditCriminalDetailInfoView(LoginRequiredMixin, PermissionRequiredMixin, Up
     template_name = 'criminals/edit_criminal_detail_info.html'
     criminal = None
     detail_info = None
-    form_class = CriminalCreationForm
+    form_class = CriminalEditMainInfoForm
 
     def get_object(self, queryset=None):
         return get_object_or_404(CriminalMainInfo, pk=self.kwargs['pk'])
@@ -148,7 +148,7 @@ class EditCriminalDetailInfoView(LoginRequiredMixin, PermissionRequiredMixin, Up
 
         context['vehicles'] = self.object.vehicles.all()
         context['criminal'] = self.object
-        context['main_form'] = kwargs.get('main_form', CriminalCreationForm(instance=self.object))
+        context['main_form'] = kwargs.get('main_form', CriminalEditMainInfoForm(instance=self.object))
         context['detail_form'] = kwargs.get('detail_form', CriminalDetailInfoForm(instance=detail_info))
         return context
 
@@ -156,7 +156,7 @@ class EditCriminalDetailInfoView(LoginRequiredMixin, PermissionRequiredMixin, Up
         self.object = get_object_or_404(CriminalMainInfo, pk=self.kwargs['pk'])
         detail_info = getattr(self.object, 'detail_info', None)
 
-        main_form = CriminalCreationForm(request.POST, instance=self.object)
+        main_form = CriminalEditMainInfoForm(request.POST, instance=self.object)
         detail_form = CriminalDetailInfoForm(request.POST, instance=detail_info)
 
         if main_form.is_valid() and detail_form.is_valid():

@@ -1,0 +1,107 @@
+/*
+.navbar {
+    height: 100px;
+    background-color: #1b1b1b;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+}
+
+
+.nav-list {
+    list-style-type: none;
+    margin: 10px;
+    padding: 0;
+    display: flex;
+    gap: 0;
+}
+
+.nav-list li a {
+    text-decoration: none;
+    color: #339933;
+    background-color: #3c3737;
+    padding: 25px 30px;
+    border-radius: 5px;
+    border-width: 10px;
+    border-color: black;
+    font-size: 20px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+
+.nav-list li a:hover {
+    background-color: #339933;
+    color: #1b1b1b;
+    box-shadow: 0 0 10px #339933;
+}
+
+
+.nav-list li a:active,
+.nav-list li a:focus {
+    background-color: #333;
+    color: #ffffff;
+}*/
+.navbar {
+    height: 100px;
+    background-color: #1b1b1b;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+}
+/* Navbar list */
+.nav-list {
+    list-style-type: none;
+    margin: 10px;
+    padding: 0;
+    display: flex;
+    gap: 0; /* Remove gaps between buttons */
+}
+
+/* Navbar links (buttons) */
+.nav-list li a {
+    text-decoration: none;
+    color: #339933; /* Button text color */
+    background-color: #3c3737; /* Button background */
+    padding: 25px 30px;
+    font-size: 20px;
+    font-weight: 500;
+    transition: all 0.3s ease; /* Smooth transitions */
+    border: 3px solid black; /* Add border */
+    border-left: 0;
+}
+
+/* Leftmost button with rounded left edges */
+.nav-list li:first-child a {
+    border: 3px solid black; /* Restore left border */
+    border-top-left-radius: 10px; /* Rounded top-left corner */
+    border-bottom-left-radius: 10px; /* Rounded bottom-left corner */
+}
+
+/* Rightmost button with rounded right edges */
+.nav-list li:last-child a {
+    border: 3px solid black; /* Restore right border */
+    border-left: 0;
+    border-top-right-radius: 10px; /* Rounded top-right corner */
+    border-bottom-right-radius: 10px; /* Rounded bottom-right corner */
+}
+
+/* Hover effect */
+.nav-list li a:hover {
+    background-color: #339933; /* Highlight on hover */
+    color: #1b1b1b; /* Text color changes on hover */
+    box-shadow: 0 0 10px #339933; /* Glowing effect */
+}
+
+/* Active or focused link styling */
+.nav-list li a:active,
+.nav-list li a:focus {
+    background-color: #333;
+    color: #ffffff;
+}

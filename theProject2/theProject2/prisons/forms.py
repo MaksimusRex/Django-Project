@@ -4,7 +4,7 @@ from .models import Prison
 class PrisonCreationForm(forms.ModelForm):
     class Meta:
         model = Prison
-        fields = ['name', 'capacity', 'cells', 'security_level']
+        fields = ['name', 'capacity', 'cells', 'security_level', 'picture']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter prison name'}),
             'location': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter location'}),

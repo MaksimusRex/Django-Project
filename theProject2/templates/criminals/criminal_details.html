@@ -7,21 +7,24 @@
 </head>
 <body>
     <div>
-        <h1>{{ criminal.first_name }} {{ criminal.middle_name }} {{ criminal.last_name }}</h1>
         {% if criminal.picture %}
             <p><img src="{{ criminal.picture }}" alt="{{ criminal.first_name }}'s picture" /></p>
         {% else %}
+            <p><img src="{% static 'images/default_photo.jpg' %}" alt="Default picture" /></p>
+        {% endif %}
+        <h1>{{ criminal.first_name }} {{ criminal.middle_name }} {{ criminal.last_name }}</h1>
+        
         <p>Gender: {{ criminal.gender }}</p>
         <p>Age: {{ criminal.age }}</p>
         <p>Height: {{ criminal.height }} cm</p>
         
-            <p>Picture: <img src="{% static 'images/default_photo.jpg' %}" alt="Default picture" /></p>
-        {% endif %}
         <p>Created At: {{ criminal.created_at }}</p>
-        <p>Policeman: {{ criminal.policeman }}</p>
-    
+        {% if criminal.prison %}
+            <p>Currently in {{ criminal.prison.name }} prison.</p>
+        {% endif %}
+        
+        <h2>Detail Information:</h2>
         {% if detail_info %}
-            <h2>Detail Information:</h2>
             <p>Hair Color: {{ detail_info.hair_color|default:"No information" }}</p>
             <p>Eye Color: {{ detail_info.eye_color|default:"No information" }}</p>
             <p>Languages: {{ detail_info.languages|default:"No information" }}</p>
@@ -44,9 +47,9 @@
         {% endif %}
     
         
-    
-        <button id="add-crime-btn">Add Crime</button>
-    
+        {% if 'crimes.add_crime' in request.user.get_group_permissions or perms.criminals.can_do_approve %}
+            <button id="add-crime-btn">Add Crime</button>
+        {% endif %}
         <!-- Modal for adding crimes -->
         <div id="crime-modal" style="display:none;">
             <form id="crime-form">
@@ -66,12 +69,10 @@
         {% else %}
             <h2>No vehicles recorded currently.</h2>
         {% endif %}
-    
-    
         
-    
-        <button id="add-vehicle-btn" data-criminal-id="{{ criminal.id }}">Add Vehicle</button>
-    
+        {% if 'vehicles.add_vehicle' in request.user.get_group_permissions or perms.criminals.can_do_approve %}
+            <button id="add-vehicle-btn" data-criminal-id="{{ criminal.id }}">Add Vehicle</button>
+        {% endif %}
         <!-- Modal for adding vehicles -->
         <div id="vehicle-modal" style="display:none;">
             <form id="vehicle-form">
@@ -90,6 +91,7 @@
     </div>
 </body>
 </html>
+{% if 'criminals.change_criminalmaininfo' in request.user.get_group_permissions or perms.criminals.can_do_change%}
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     // Crime modal logic
@@ -170,3 +172,4 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
+{% endif %}
