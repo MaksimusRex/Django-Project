@@ -2,48 +2,49 @@
 {% load static %}
 
 {% block content %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="{% static 'common/search_form.css' %}">
+    <link rel="stylesheet" href="{% static 'common/base.css' %}">
+    <title>Document</title>
+</head>
 <body>
     <h1>Registered Vehicles</h1>
     
     {% if vehicles %}
             <!-- Search Form -->
-    <form method="get" action="{% url 'vehicle_dashboard' %}">
-        <div>
-            {{ search_form.vehicle_type.label }}: {{ search_form.vehicle_type }}
-        </div>
-        <div>
-            {{ search_form.model.label }}: {{ search_form.model }}
-        </div>
-        <div>
-            {{ search_form.year.label }}: {{ search_form.year }}
-        </div>
-        <div>
-            {{ search_form.color.label }}: {{ search_form.color }}
-        </div>
-        <button type="submit">Search</button>
-    </form>
-
+    <div class="search-div">
+        <form method="get" class="search-form">
+            {{ search_form.as_p }}
+            <button type="submit" class="search-btn">Search</button>
+        </form>
+    </div>    
         
-    <div>
+    <div class="main_dash_div">
         {% for vehicle in vehicles %}
-            <div>
-                <h1>Type:</h1>
+            <div class="dashboard_div">
+                <p>Type: {{ vehicle.vehicle_type }}</p>
                 <p>Brand: {{ vehicle.make }}</p>
                 <p>Model: {{ vehicle.model }}</p>
                 <p>Year: {{ vehicle.year }}</p>
                 <p>License plate: {{ vehicle.license_plate|upper }}</p>
-                <p>Criminal: <a href="{% url 'criminal_details' vehicle.criminal.id %}">{{ vehicle.criminal.first_name }} {{ vehicle.criminal.last_name }}</a></p>
+                <p>Criminal: <a href="{% url 'criminal_details' vehicle.criminal.id %}" class="link">{{ vehicle.criminal.first_name }} {{ vehicle.criminal.last_name }}</a></p>
 
                 {% if 'vehicles.change_vehicle' in request.user.get_group_permissions or perms.criminals.can_do_approve %}
-                    <a href="{% url 'detail_vehicle' vehicle.pk %}"><button>Details</button></a>
+                    <button class="div-button"><a href="{% url 'detail_vehicle' vehicle.pk %}">Details</a></button>
                 {% endif %}
             </div>
         {% endfor %}
     </div>
     {% if not page_obj.has_next and page_obj.number == 1 %}
-                <p>That's the only page</p>
+                <p class="page-div-p">That's the only page</p>
             {% else %}
-                <div>
+                <div class="page-div">
                     <span>
                         {% if page_obj.has_previous %}
                             <a href="?page=1">&laquo; first</a>
@@ -60,9 +61,11 @@
                         {% endif %}
                     </span>
                 </div>
-            {% endif %}    
+            {% endif %}
     {% else %}
         <h1>There are no registered vehicles.</h1>
     {% endif %}
 </body>
+</html>
+
 {% endblock %}

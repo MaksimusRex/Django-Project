@@ -1,9 +1,11 @@
+from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.shortcuts import render, redirect
 
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from django.urls import reverse
+from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.generic import DetailView, UpdateView, DeleteView
 
@@ -28,8 +30,9 @@ def add_crime(request, criminal_id):
     return render(request, 'crimes/crime_form.html', {'form': form, 'criminal': criminal})
 
 
-class DetailCrimeView(DetailView):
+class DetailCrimeView(DetailView, PermissionRequiredMixin):
     model = Crime
+    permission_required = 'crimes.view_crime'
     template_name = 'crimes/details.html'
     context_object_name = 'crime'
 
@@ -37,11 +40,11 @@ class DetailCrimeView(DetailView):
         return get_object_or_404(Crime, pk=self.kwargs['pk'])
 
 
-class EditCrimeView(UpdateView):
+class EditCrimeView(UpdateView, PermissionRequiredMixin):
     model = Crime
     form_class = CrimeForm
     template_name = 'crimes/edit_crime.html'
-    permission_required = 'crimes.change_crime'  # Ensure this permission exists
+    permission_required = 'crimes.change_crime'
     fields = ['name', 'description', 'date', 'points']
     context_object_name = 'crime'
 

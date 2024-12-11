@@ -6,9 +6,10 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views import View
-from django.views.generic import CreateView, DetailView
+from django.views.generic import CreateView, DetailView, UpdateView
 
 from theProject2.users.forms import AppUserCreationForm, ChangeUserDetailsForm, PoliceOfficerCreationForm
+from theProject2.users.models import Profile
 
 UserModel = get_user_model()
 
@@ -19,13 +20,20 @@ class UserRegisterView(CreateView):
 
     def form_valid(self, form):
         user = form.save()  # Save the new user
+        print(f"Is user authenticated? {user.is_authenticated}")
         login(self.request, user, backend='theProject2.users.authentication.EmailOrUsernameAuthentication')  # Log the user in
+        print(f"Is user authenticated after login? {self.request.user.is_authenticated}")
         return super().form_valid(form)
 
-class ChangeProfileDetails: # TODO: Finish??
+class ChangeProfileDetails(UpdateView):
+    model = Profile
     form_class = ChangeUserDetailsForm
-    template_name = 'registration/change_profile_details.html'
-    success_url = reverse_lazy(template_name)
+    template_name = 'users/change_profile_details.html'
+    success_url = reverse_lazy('users')  # Redirect after successful update
+
+    def get_object(self, queryset=None):
+        # Ensure the user can only edit their own profile
+        return get_object_or_404(Profile, user=self.request.user)
 
 class UserDetailView(LoginRequiredMixin, DetailView):
     model = UserModel

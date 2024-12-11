@@ -17,3 +17,12 @@ class PrisonCreationForm(forms.ModelForm):
             'capacity': 'Capacity',
             'security_level': 'Security Level',
         }
+
+class PrisonSearchForm(forms.Form):
+    name = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={
+            'placeholder': 'Search by name',
+            'class': 'search-input',
+        })
+    )

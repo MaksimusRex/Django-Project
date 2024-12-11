@@ -2,17 +2,39 @@
 {% load static %}
 
 {% block content %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="{% static 'common/search_form.css' %}">
+    <link rel="stylesheet" href="{% static 'common/base.css' %}">
+    <title>Document</title>
+</head>
 <body>
     <h1>Registry of Criminals</h1>
+    <!-- Search Form -->
+    <div class="search-div">
+        <form method="get" class="search-form">
+            {{ search_form.as_p }}
+            <button type="submit" class="search-btn">Search</button>
+        </form>
+    </div>
     {% if criminals %}
-    <div>
+    <div class="main_dash_div">
         {% for criminal in criminals %}
-            <div>
-                <h1>Name:</h1>
+            <div class="dashboard_div">
+                {% if criminal.picture %}
+                    <img src="{{ criminal.picture }}" alt="{{ criminal.first_name }}'s picture" />
+                {% else %}
+                    <img src="{% static 'images/default_photo.jpg' %}" alt="Default picture" />
+                {% endif %}
                 <p>Name: {{ criminal.first_name }} {{ criminal.middle_name }} {{ criminal.last_name }}</p>
                 <p>Age: {{ criminal.age }}</p>
                 <p>Gender: {{ criminal.gender }}</p>
-                <a href="{% url 'criminal_details' criminal.id %}">Details</a>
+                <button class="div-button"><a href="{% url 'criminal_details' criminal.id %}">Details</a></button>
                 {% if not criminal.is_approved %}
                     {% if 'criminals.can_approve_criminals' in request.user.get_group_permissions or perms.criminals.can_do_approve %}
                         <a href="{% url 'approve' criminal.id %}">Approve</a>
@@ -22,9 +44,9 @@
         {% endfor %}
     </div>
     {% if not page_obj.has_next and page_obj.number == 1 %}
-                <p>That's the only page</p>
+                <p class="page-div-p">That's the only page</p>
             {% else %}
-                <div>
+                <div class="page-div">
                     <span>
                         {% if page_obj.has_previous %}
                             <a href="?page=1">&laquo; first</a>
@@ -46,4 +68,5 @@
         <h1>There are no registered criminals.</h1>
     {% endif %}
 </body>
+</html>
 {% endblock %}

@@ -1,62 +1,22 @@
-/*
+
 .navbar {
     height: 100px;
-    background-color: #1b1b1b;
-    padding: 10px 20px;
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-    border-radius: 10px;
-}
-
-
-.nav-list {
-    list-style-type: none;
-    margin: 10px;
-    padding: 0;
-    display: flex;
-    gap: 0;
-}
-
-.nav-list li a {
-    text-decoration: none;
-    color: #339933;
-    background-color: #3c3737;
-    padding: 25px 30px;
-    border-radius: 5px;
-    border-width: 10px;
-    border-color: black;
-    font-size: 20px;
-    font-weight: 500;
-    transition: all 0.3s ease;
-}
-
-
-.nav-list li a:hover {
-    background-color: #339933;
-    color: #1b1b1b;
-    box-shadow: 0 0 10px #339933;
-}
-
-
-.nav-list li a:active,
-.nav-list li a:focus {
-    background-color: #333;
-    color: #ffffff;
-}*/
-.navbar {
-    height: 100px;
+    width: 2000px;
     background-color: #1b1b1b;
     padding: 10px 20px;
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    position: sticky;
+    top: 0;
+    /*box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);*/
     border-radius: 10px;
+    box-shadow: 0 0 5px 2px #155015; /* Dark green glow effect */
+    transition: box-shadow 0.3s ease-in-out; /* Smooth transition */
 }
 /* Navbar list */
 .nav-list {
+    max-width: 100%;
     list-style-type: none;
     margin: 10px;
     padding: 0;
@@ -104,4 +64,10 @@
 .nav-list li a:focus {
     background-color: #333;
     color: #ffffff;
+}
+header {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

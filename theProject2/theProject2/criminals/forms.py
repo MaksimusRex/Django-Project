@@ -55,3 +55,12 @@ class CriminalEditMainInfoForm(forms.ModelForm):
         else:
             # Default to show no prisons if the instance is not provided
             self.fields['prison'].queryset = Prison.objects.none()
+
+class CriminalSearchForm(forms.Form):
+    name = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={
+            'placeholder': 'Search by name',
+            'class': 'search-input',
+        })
+    )

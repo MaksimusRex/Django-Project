@@ -20,13 +20,25 @@ class VehicleSearchForm(forms.Form):
         required=False,
         max_length=100,
         label="Model",
+        widget=forms.TextInput(attrs={
+            'placeholder': 'Search by model',
+            'class': 'search-input',
+        })
     )
     year = forms.IntegerField(
         required=False,
         label="Year",
+        widget=forms.TextInput(attrs={
+            'placeholder': 'Search by year',
+            'class': 'search-input',
+        })
     )
     color = forms.CharField(
         required=False,
         max_length=50,
         label="Color",
+        widget=forms.TextInput(attrs={
+            'placeholder': 'Search by color',
+            'class': 'search-input',
+        })
     )

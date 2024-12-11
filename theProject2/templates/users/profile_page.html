@@ -3,20 +3,32 @@
 
 
 {% block content %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'common/search_form.css' %}">
+    <link rel="stylesheet" href="{% static 'common/base.css' %}">
+    <link rel="stylesheet" href="{% static 'common/homepage.css' %}">
+</head>
+<body>
+<div class="user-div">
     {% if user.is_authenticated %}
         <h1>Welcome!</h1>
         <h2>Profile details:</h2>
         <p>Username: {{ user.username }}</p>
         <p>Email: {{ user.email }}</p>
-        {% if user.age != null %}
-            <p>Age: {{ user.age }}</p>
-        {% endif %}
-        {% if user.first_name != null %}
-            <p>First name: {{ user.first_name }}</p>
-        {% endif %}
-        {% if user.last_name != null %}
-            <p>Last name: {{ user.last_name }}</p>
-        {% endif %}
+        <p>Age: {{ user.profile.age|default:"No information" }}</p>
+        <p>First name: {{ user.profile.first_name|default:"No information" }}</p>
+        <p>Last name: {{ user.profile.last_name|default:"No information" }}</p>
     {% endif %}
-    <button>Add profile details</button>
+    
+    <button><a href="{% url 'change_profile_details' %}">Add profile details</a></button>
+</div>
+</body>
+</html>
 {% endblock %}

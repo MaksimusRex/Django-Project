@@ -1,3 +1,7 @@
+{% extends 'common/navbar.html' %}
+{% load static %}
+
+{% block content %}
 <div>
     <h1>Edit {{ criminal.first_name }} {{ criminal.last_name }}</h1>
 
@@ -11,5 +15,5 @@
 
     
 </div>
-
+{% endblock %}
 

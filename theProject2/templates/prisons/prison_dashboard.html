@@ -2,21 +2,69 @@
 {% load static %}
 
 {% block content %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'common/search_form.css' %}">
+    <link rel="stylesheet" href="{% static 'common/base.css' %}">
+</head>
 <body>
-    {% for prison in prisons %}
-        <div>
-            {% if prison.picture %}
-                <p><img src="{{ criminal.picture }}" alt="{{ criminal.first_name }}'s picture" /></p>
+    <h1>Prisons</h1>
+    <!-- Search Form -->
+    <div class="search-div">
+        <form method="get" class="search-form">
+            {{ search_form.as_p }}
+            <button type="submit" class="search-btn">Search</button>
+        </form>
+    </div>
+    <div class="main_dash_div">
+        {% for prison in prisons %}
+            <div class="dashboard_div">
+                {% if prison.picture %}
+                    <p><img src="{{ criminal.picture }}" alt="{{ criminal.first_name }}'s picture" /></p>
+                {% endif %}
+                <p>Name: {{ prison.name }}</p>
+                <p>Population: {{ prison.current_population }}/{{ prison.capacity }}</p>
+                <p>Security level: {{ prison.security_level }}</p>
+                {% if prison.is_full %}
+                    <p style="color: red;">This prison is at full capacity!</p>
+                {% endif %}
+                {% if 'prisons.change_prison' in request.user.get_group_permissions or perms.criminals.can_do_approve %}
+                    <button class="div-button"><a href="{% url 'detail_prison' prison.pk %}">Details</a></button>
+                {% endif %}
+            </div>
+        {% endfor %}
+    
+    </div>
+    {% if 'prisons.add_prison' in request.user.get_group_permissions or perms.criminals.can_do_approve %}
+        <button class="div-button"><a href="{% url 'create_prison' %}">Add prison</a></button>
+    {% endif %}
+    {% if not page_obj.has_next and page_obj.number == 1 %}
+                <p class="page-div-p">That's the only page</p>
+            {% else %}
+                <div class="page-div">
+                    <span>
+                        {% if page_obj.has_previous %}
+                            <a href="?page=1">&laquo; first</a>
+                            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                        {% endif %}
+                
+                        <span>
+                            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                        </span>
+                
+                        {% if page_obj.has_next %}
+                            <a href="?page={{ page_obj.next_page_number }}">next</a>
+                            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                        {% endif %}
+                    </span>
+                </div>
             {% endif %}
-            <p>Name: {{ prison.name }}</p>
-            <p>Population: {{ prison.current_population }}/{{ prison.capacity }}</p>
-            {% if prison.is_full %}
-                <p style="color: red;">This prison is at full capacity!</p>
-            {% endif %}
-            {% if 'prisons.change_prison' in request.user.get_group_permissions or perms.criminals.can_do_approve %}
-                <a href="{% url 'detail_prison' prison.pk %}"><button>Details</button></a>
-            {% endif %}
-        </div>
-    {% endfor %}
 </body>
+</html>
 {% endblock %}

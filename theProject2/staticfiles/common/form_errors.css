@@ -1,0 +1,7 @@
+.errorlist {
+    color: #ff5a5a;
+    display: flex;
+    align-self: start;
+    justify-self: start;
+    margin-left: 10px;
+}

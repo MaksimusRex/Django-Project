@@ -30,4 +30,8 @@ class AppUserAdmin(UserAdmin):
         ('Important Dates', {'fields': ('last_login',)})
     )
 
+admin.site.site_header = "Criminal Registry Admin"
+admin.site.site_title = "Criminal Registry Admin Portal"
+admin.site.index_title = "Welcome to the Criminal Registry"
+
 

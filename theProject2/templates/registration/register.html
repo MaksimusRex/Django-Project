@@ -6,50 +6,99 @@
     <meta charset="UTF-8">
     <title>Register</title>
     <link rel="stylesheet" href="{% static 'registration/register.css' %}">
+    <link rel="stylesheet" href="{% static 'common/form_errors.css' %}">
 </head>
 <body>
     <div class="register-div">
         <h1>Register</h1>
         <form method="POST" class="login-form">
             {% csrf_token %}
+            <!-- Display general form errors -->
+            {% if form.non_field_errors %}
+                <div class="non-field-errors">
+                    <ul>
+                        {% for error in form.non_field_errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+            
+            <!-- Username Field -->
             <div>
                 <label for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
                 {{ form.username }}
+                <!-- Display field-specific errors -->
+                {% if form.username.errors %}
+                    <ul class="errorlist">
+                        {% for error in form.username.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
             </div>
+
+            <!-- Email Field -->
             <div>
                 <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
                 {{ form.email }}
+                <!-- Display field-specific errors -->
+                {% if form.email.errors %}
+                    <ul class="errorlist">
+                        {% for error in form.email.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
             </div>
+
+            <!-- Password1 Field -->
             <div>
                 <label for="{{ form.password1.id_for_label }}">{{ form.password1.label }}</label>
                 {{ form.password1 }}
+                <!-- Display field-specific errors -->
+                {% if form.password1.errors %}
+                    <ul class="errorlist">
+                        {% for error in form.password1.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                <!-- Display help text -->
+                <div class="helptext-container">
+                    {{ form.password1.help_text }}
+                </div>
             </div>
-            
-            <!-- Move help text here -->
-            <div class="helptext-container">
-                {{ form.password1.help_text }}
-            </div>
-            
+
+            <!-- Password2 Field -->
             <div>
                 <label for="{{ form.password2.id_for_label }}">{{ form.password2.label }}</label>
                 {{ form.password2 }}
+                <!-- Display field-specific errors -->
+                {% if form.password2.errors %}
+                    <ul class="errorlist">
+                        {% for error in form.password2.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                <!-- Display help text -->
+                <div class="helptext-container">
+                    <p>{{ form.password2.help_text }}</p>
+                </div>
             </div>
-            
-            <!-- Move help text here -->
-            <div class="helptext-container">
-                <p>{{ form.password2.help_text }}</p>
-            </div>
+
+            <!-- Submit Button -->
             <button type="submit">Register</button>
         </form>
-        
+
+        <!-- Police Officer Register Link -->
         <a href="{% url 'police_officer_register' %}">
             Register as Police Officer
         </a>
-        <p>Already have an account? <a href="{% url 'login' %}">Log in</a>.</p>
-    </div>
 
-    <div>
-        
+        <!-- Login Link -->
+        <p>Already have an account? <a href="{% url 'login' %}">Log in</a>.</p>
     </div>
 </body>
 </html>

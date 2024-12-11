@@ -1,6 +1,7 @@
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, authenticate
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm
 from django import forms
+from django.core.exceptions import ValidationError
 from django.core.validators import MinLengthValidator
 
 from theProject2.users.models import Profile
@@ -28,6 +29,22 @@ class AppUserCreationForm(UserCreationForm):
         self.fields['password2'].widget.attrs.update({
             'placeholder': 'Confirm your password'
         })
+
+    #def clean(self):
+    #    username = self.cleaned_data.get('username')
+    #    email = self.cleaned_data.get('email')
+    #    password1 = self.cleaned_data.get('password1')
+    #    password2 = self.cleaned_data.get('password2')
+#
+    #    if username and password:
+    #        # Use authenticate to check credentials
+    #        user = authenticate(self.request, username=username, password=password)
+    #        if not user:
+    #            raise ValidationError(
+    #                "The username/email or password is incorrect.",
+    #                code='invalid_login'
+    #            )
+    #    return super().clean()
 
 
 
@@ -86,13 +103,40 @@ class AppUserChangeForm(UserChangeForm):
 class EmailOrUsernameLoginForm(AuthenticationForm):
     username = forms.CharField(label="Username or Email", max_length=254)
 
+    def clean(self):
+        username = self.cleaned_data.get('username')
+        password = self.cleaned_data.get('password')
+
+        if username and password:
+            # Use authenticate to check credentials
+            user = authenticate(self.request, username=username, password=password)
+            if not user:
+                raise ValidationError(
+                    "The username/email or password is incorrect.",
+                    code='invalid_login'
+                )
+        return super().clean()
+
 
 ### 5. Profile Change Form ###
 class ChangeUserDetailsForm(forms.ModelForm):
     class Meta:
         model = Profile
-        exclude = ['user']  # Prevent user field from being changed by form users
-
+        fields = ['first_name', 'last_name', 'age']  # Include the fields you want to display
+        widgets = {
+            'first_name': forms.TextInput(attrs={
+                'placeholder': 'Enter your first name',
+                'class': 'form-control',
+            }),
+            'last_name': forms.TextInput(attrs={
+                'placeholder': 'Enter your last name',
+                'class': 'form-control',
+            }),
+            'age': forms.NumberInput(attrs={
+                'placeholder': 'Enter your age',
+                'class': 'form-control',
+            }),
+        }
 
 #
 #class AppUserCreationForm(UserCreationForm):

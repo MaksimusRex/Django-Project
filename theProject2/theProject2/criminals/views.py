@@ -1,14 +1,14 @@
+from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.http import HttpResponseForbidden, JsonResponse
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
-from django.views.generic import ListView, FormView, CreateView, UpdateView, DetailView
+from django.utils.decorators import method_decorator
+from django.views.generic import ListView, CreateView, UpdateView, DetailView
 
-from theProject2.crimes.forms import CrimeForm
-from theProject2.criminals.forms import CriminalCreationForm, CriminalDetailInfoForm, CriminalEditMainInfoForm
+from theProject2.criminals.forms import CriminalCreationForm, CriminalDetailInfoForm, CriminalEditMainInfoForm, \
+    CriminalSearchForm
 from theProject2.criminals.models import CriminalMainInfo, CriminalDetailInfo
 from theProject2.mixins import CanCreateCriminalsMixin
-from theProject2.prisons.models import Prison
 
 
 class AddCriminalView(CanCreateCriminalsMixin, LoginRequiredMixin, CreateView):
@@ -46,9 +46,24 @@ class CriminalDashboardView(ListView):
             query = self.request.GET.get('query')
             queryset = queryset.filter(name__icontains=query)
 
+        name = self.request.GET.get('name')  # Get the name from the query parameters
+
+        if name:
+            queryset = queryset.filter(
+                first_name__icontains=name
+            ) | queryset.filter(
+                last_name__icontains=name
+            )  # Filter by first or last name (case-insensitive)
+
         return queryset
 
-def approve_criminal(request, pk): # TODO: Make async view
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search_form'] = CriminalSearchForm(self.request.GET)
+        return context
+
+@method_decorator(permission_required('criminals.can_approve_criminals', raise_exception=True), name='dispatch')
+def approve_criminal(request, pk):
     criminal = CriminalMainInfo.objects.get(pk=pk)
     criminal.is_approved = True
     criminal.save()
@@ -68,65 +83,6 @@ class CriminalDetailView(DetailView):
         except CriminalDetailInfo.DoesNotExist:
             context['detail_info'] = None  # Handle cases where details are missing
         return context
-
-
-#class EditCriminalDetailInfoView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
-#    model = CriminalMainInfo
-#    permission_required = 'criminals.change_criminalmaininfo'
-#    template_name = 'criminals/edit_criminal_detail_info.html'
-#
-#    def get_object(self, queryset=None):
-#        return get_object_or_404(CriminalMainInfo, pk=self.kwargs['pk'])
-#
-#    def get_success_url(self):
-#        return reverse('criminal_details', kwargs={'pk': self.object.pk})
-#
-#    def get_context_data(self, **kwargs):
-#        context = super().get_context_data(**kwargs)
-#        self.object = self.get_object()
-#
-#        # Retrieve associated detail info
-#        detail_info = getattr(self.object, 'detail_info', None)
-#
-#        # Calculate total crime points for filtering prisons
-#        criminal_points = self.object.total_crime_points()
-#
-#        # Main form (with filtered prisons)
-#        main_form = kwargs.get('main_form', CriminalCreationForm(
-#            instance=self.object,
-#            initial={'prison': self.object.prison},
-#        ))
-#        main_form.fields['prison'].queryset = Prison.objects.filter(required_points__lte=criminal_points)
-#
-#        # Detail form
-#        detail_form = kwargs.get('detail_form', CriminalDetailInfoForm(instance=detail_info))
-#
-#        # Add forms to context
-#        context['main_form'] = main_form
-#        context['detail_form'] = detail_form
-#        return context
-#
-#    def post(self, request, *args, **kwargs):
-#        self.object = self.get_object()
-#        detail_info = getattr(self.object, 'detail_info', None)
-#
-#        # Instantiate forms with POST data
-#        main_form = CriminalCreationForm(request.POST, instance=self.object)
-#        detail_form = CriminalDetailInfoForm(request.POST, instance=detail_info)
-#
-#        if main_form.is_valid() and detail_form.is_valid():
-#            main_form.save()
-#            detail_instance = detail_form.save(commit=False)
-#            detail_instance.main_info = self.object
-#            detail_instance.save()
-#            return redirect(self.get_success_url())
-#
-#        # Render the form with errors if validation fails
-#        return self.render_to_response(self.get_context_data(
-#            main_form=main_form,
-#            detail_form=detail_form,
-#        ))
-
 
 class EditCriminalDetailInfoView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = CriminalMainInfo

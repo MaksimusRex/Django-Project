@@ -1,3 +1,7 @@
+{% extends 'common/navbar.html' %}
+{% load static %}
+
+{% block content %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,3 +20,4 @@
     <a href="{% url 'criminal_details' vehicle.criminal.pk %}">Back to Criminal Details</a>
 </body>
 </html>
+{% endblock %}

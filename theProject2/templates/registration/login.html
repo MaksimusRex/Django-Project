@@ -18,6 +18,7 @@
             <label for="{{ form.password.id_for_label }}">{{ form.password.label }}</label>
             {{ form.password }}
         </div>
+        <p>{{ form.non_field_errors }}</p>
         <button>Login</button>
         <p>Don't have an account? <a href="{% url 'register' %}">Register</a></p>
     </form>

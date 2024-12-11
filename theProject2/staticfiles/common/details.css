@@ -1,0 +1,24 @@
+.detail-div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    justify-items: center;
+}
+.detail-div p {
+    display: flex;
+    justify-content: center;
+    justify-self: center;
+}
+.detail-div h2 {
+    display: flex;
+    justify-content: center;
+    justify-self: center;
+    color: #D3D3D3;
+}
+.detail-div a {
+    color: #ADD8E6;
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 10px;
+    margin-left: 10px;
+}

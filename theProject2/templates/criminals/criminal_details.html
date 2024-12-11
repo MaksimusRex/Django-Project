@@ -1,12 +1,18 @@
+{% extends 'common/navbar.html' %}
 {% load static %}
+
+{% block content %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>{{ criminal.first_name }} {{ criminal.last_name }} - Details</title>
+    <link rel="stylesheet" href="{% static 'common/search_form.css' %}">
+    <link rel="stylesheet" href="{% static 'common/base.css' %}">
+    <link rel="stylesheet" href="{% static 'common/details.css' %}">
 </head>
 <body>
-    <div>
+    <div class="detail-div">
         {% if criminal.picture %}
             <p><img src="{{ criminal.picture }}" alt="{{ criminal.first_name }}'s picture" /></p>
         {% else %}
@@ -173,3 +179,4 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 {% endif %}
+{% endblock %}

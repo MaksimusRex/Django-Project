@@ -6,8 +6,8 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" href="{% static 'common/navigation.css' %}">
-    <link rel="stylesheet" href="{% static 'common/base.css' %}">
 </head>
+<header>
     <nav class="navbar">
         {% if not request.user.is_authenticated %}
             <ul class="nav-list">
@@ -36,11 +36,17 @@
                         Login
                     </a>
                 </li>
+                <li><a href="{% url 'register' %}">Register</a></li>
             </ul>
             
             
         {% else %}
             <ul class="nav-list">
+                <li>
+                    <a href="{% url 'home' %}">
+                        Home Page
+                    </a>
+                </li>
                 <li>
                     <a href="{% url 'criminal_dashboard' %}">
                         Criminals Dashboard
@@ -56,20 +62,15 @@
                         Prisons Dashboard
                     </a>
                 </li>
+                <li>
+                    <a href="{% url 'users' %}">
+                        Profile details
+                    </a>
+                </li>
             </ul>
-            <button>
-                <a href="{% url 'users' %}">
-                    <p>Profile details</p>
-                </a>
-            </button>
-            <form method="post" action="{% url 'logout' %}">
-                {% csrf_token %}
-                <button type="submit">
-                    Logout
-                </button>
-            </form>
         {% endif %}
     </nav>
+</header>
 <body>
 {% block content %}
 {% endblock %}

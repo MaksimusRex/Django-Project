@@ -1,7 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse
 from django.views import View
 from django.views.generic import UpdateView, DetailView, ListView
 
@@ -10,8 +10,9 @@ from theProject2.vehicles.forms import VehicleForm, VehicleSearchForm
 from theProject2.vehicles.models import Vehicle
 
 
-class AddVehicleView(View):
+class AddVehicleView(View, PermissionRequiredMixin):
     template_name = 'vehicles/vehicle_form.html'
+    permission_required = 'vehicles.add_vehicle'
 
     def get(self, request, criminal_id):
         """Render the empty vehicle form for the modal."""
@@ -70,8 +71,9 @@ class DeleteVehicleView(LoginRequiredMixin, PermissionRequiredMixin, View):
         return redirect(reverse('criminal_details', kwargs={'pk': criminal_id}))
 
 
-class DetailVehicleView(DetailView):
+class DetailVehicleView(DetailView, PermissionRequiredMixin):
     model = Vehicle
+    permission_required = 'vehicles.view_vehicle'
     template_name = 'vehicles/details.html'
     context_object_name = 'vehicle'
 
