@@ -22,6 +22,7 @@
             <button type="submit" class="search-btn">Search</button>
         </form>
     </div>
+    {% if prisons %}
     <div class="main_dash_div">
         {% for prison in prisons %}
             <div class="dashboard_div">
@@ -39,6 +40,9 @@
                 {% endif %}
             </div>
         {% endfor %}
+    {% else %}
+        <h1>There are no prisons.</h1>
+    {% endif %}
     
     </div>
     {% if 'prisons.add_prison' in request.user.get_group_permissions or perms.criminals.can_do_approve %}

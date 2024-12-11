@@ -16,7 +16,7 @@
 <body>
     <h1>Registered Vehicles</h1>
     
-    {% if vehicles %}
+    
             <!-- Search Form -->
     <div class="search-div">
         <form method="get" class="search-form">
@@ -24,7 +24,7 @@
             <button type="submit" class="search-btn">Search</button>
         </form>
     </div>    
-        
+        {% if vehicles %}
     <div class="main_dash_div">
         {% for vehicle in vehicles %}
             <div class="dashboard_div">
